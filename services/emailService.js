@@ -1,5 +1,6 @@
-import nodemailer from 'nodemailer';
-import 'dotenv/config';
+const nodemailer = require('nodemailer');
+const dotenv = require("dotenv");
+dotenv.config();
 
 const MAIL_SETTINGS = {
     host: "smtp.gmail.com",
@@ -41,4 +42,4 @@ const sendMail = async (params) => {
     }
 };
 
-export default sendMail;
+module.exports = sendMail;

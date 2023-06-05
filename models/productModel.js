@@ -1,5 +1,5 @@
-import { DataTypes } from "sequelize";
-import { sequelize } from "../config/dbconfig.js";
+const { DataTypes } = require("sequelize");
+const { sequelize } = require("../config/dbconfig.js");
 let ProductModel = sequelize.define("products", {
     id: {
         type: DataTypes.INTEGER,
@@ -46,4 +46,4 @@ let ProductModel = sequelize.define("products", {
 
 }, { timestamps: true },);
 
-export default ProductModel;
+module.exports = ProductModel;

@@ -1,6 +1,6 @@
-import express from "express";
-import { addReview, getReviews, getProductReviews, addProductReview } from "../controllers/reviews.js";
-import { verifyToken } from '../middleware/auth.js';
+const express = require("express");
+const { addReview, getReviews, getProductReviews, addProductReview } = require("../controllers/reviews.js");
+const { verifyToken } = require('../middleware/auth.js');
 
 const router = express.Router();
 
@@ -9,4 +9,4 @@ router.get("/:id", verifyToken, getReviews);
 router.post("/product/:id", verifyToken, addProductReview);
 router.get("/product/:id", verifyToken, getProductReviews);
 
-export default router;
+module.exports = router;

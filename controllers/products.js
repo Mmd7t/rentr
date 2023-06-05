@@ -1,12 +1,12 @@
-import ProductModel from '../models/productModel.js';
-import UserModel from '../models/userModel.js';
-import responses from '../helpers/responses.js';
-import { Sequelize } from 'sequelize';
+const ProductModel = require('../models/productModel.js');
+const UserModel = require('../models/userModel.js');
+const responses = require('../helpers/responses.js');
+const { Sequelize } = require('sequelize');
 
 
 
 /*---- ADD PRODUCT ----*/
-export const addProduct = async (req, res) => {
+const addProduct = async (req, res) => {
     try {
         const { name, description, price, latitude, longitude, startBooking, endBooking } = req.body;
         const image = 'http://127.0.0.1:3000/images/' + req.file.filename;
@@ -32,7 +32,7 @@ export const addProduct = async (req, res) => {
 }
 
 /*---- GET PRODUCT ----*/
-export const getProduct = async (req, res) => {
+const getProduct = async (req, res) => {
     try {
         const product = await ProductModel.findOne({ where: { id: req.params.id } });
         if (product) {
@@ -47,7 +47,7 @@ export const getProduct = async (req, res) => {
 
 
 /*---- GET ALL PRODUCTS ----*/
-export const getAllProducts = async (req, res) => {
+const getAllProducts = async (req, res) => {
     try {
         const user = await UserModel.findOne({ where: { id: req.userId } });
         if (user) {
@@ -95,7 +95,7 @@ function deg2rad(deg) {
 
 
 /*---- SEARCH PRODUCTS ----*/
-export const searchProducts = async (req, res) => {
+const searchProducts = async (req, res) => {
     try {
         const Op = Sequelize.Op;
         const products = await ProductModel.findAll({ where: { name: { [Op.like]: `%${req.query.name}%` } } });
@@ -107,4 +107,8 @@ export const searchProducts = async (req, res) => {
     } catch (error) {
         return responses.internalServerError(res);
     }
+}
+
+module.exports = {
+    addProduct, getProduct, getAllProducts, searchProducts
 }

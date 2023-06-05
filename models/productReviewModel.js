@@ -1,5 +1,5 @@
-import { DataTypes } from "sequelize";
-import { sequelize } from "../config/dbconfig.js";
+const { DataTypes } = require("sequelize");
+const { sequelize } = require("../config/dbconfig.js");
 let ProductReviewModel = sequelize.define("product_reviews", {
     id: {
         type: DataTypes.INTEGER,
@@ -21,4 +21,4 @@ let ProductReviewModel = sequelize.define("product_reviews", {
     },
 }, { timestamps: false },);
 
-export default ProductReviewModel;
+module.exports = ProductReviewModel;

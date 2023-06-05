@@ -1,7 +1,7 @@
-import express from "express";
-import { login, register, sendOTP, verifyEmail, changeUserData, getUserData, changePassword, resetPassword, changeProfileImage } from "../controllers/auth.js";
-import { verifyToken } from '../middleware/auth.js';
-import uploadImage from '../services/uploadImage.js';
+const express = require("express");
+const { login, register, sendOTP, verifyEmail, changeUserData, getUserData, changePassword, resetPassword, changeProfileImage } = require("../controllers/auth.js");
+const { verifyToken } = require('../middleware/auth.js');
+const uploadImage = require('../services/uploadImage.js');
 
 
 const router = express.Router();
@@ -16,4 +16,4 @@ router.patch("/profile-image", [verifyToken, uploadImage], changeProfileImage);
 router.post("/reset-password", resetPassword);
 router.post("/change-password", verifyToken, changePassword);
 
-export default router;
+module.exports = router;

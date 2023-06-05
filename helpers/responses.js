@@ -26,4 +26,4 @@ const responses = {
     internalServerError,
 };
 
-export default responses;
+module.exports = responses;

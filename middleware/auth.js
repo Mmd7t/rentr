@@ -1,6 +1,6 @@
-import { decode } from '../utils/token.js';
+const { decode } = require('../utils/token.js');
 
-export const verifyToken = async (req, res, next) => {
+const verifyToken = async (req, res, next) => {
     try {
         let token = req.headers.authorization;
 
@@ -17,3 +17,5 @@ export const verifyToken = async (req, res, next) => {
         res.status(500).json({ error: error.message });
     }
 }
+
+module.exports = { verifyToken }

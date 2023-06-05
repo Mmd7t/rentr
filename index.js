@@ -1,14 +1,14 @@
 const express = require("express");
-import cors from "cors";
-import helmet from "helmet";
-import bodyParser from "body-parser";
-import dotenv from "dotenv";
-import morgan from "morgan";
-import authRoutes from "./routes/auth.js";
-import productsRoutes from "./routes/products.js";
-import reviewsRoutes from "./routes/reviews.js";
-import { init } from "./config/dbconfig.js";
-import errorHandler from './middleware/errorHandler.js';
+const cors = require("cors");
+const helmet = require("helmet");
+const bodyParser = require("body-parser");
+const dotenv = require("dotenv");
+const morgan = require("morgan");
+const authRoutes = require("./routes/auth.js");
+const productsRoutes = require("./routes/products.js");
+const reviewsRoutes = require("./routes/reviews.js");
+const { init } = require("./config/dbconfig.js");
+const errorHandler = require('./middleware/errorHandler.js');
 
 /*---- CONFIGURATIONS ----*/
 dotenv.config();

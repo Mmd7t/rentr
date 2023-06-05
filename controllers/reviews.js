@@ -1,11 +1,11 @@
-import responses from '../helpers/responses.js';
-import ReviewModel from '../models/reviewModel.js';
-import ProductReviewModel from '../models/productReviewModel.js';
+const responses = require('../helpers/responses.js');
+const ReviewModel = require('../models/reviewModel.js');
+const ProductReviewModel = require('../models/productReviewModel.js');
 
 
 
 /*---- ADD REVIEW ----*/
-export const addReview = async (req, res) => {
+const addReview = async (req, res) => {
     try {
         const { rating } = req.body;
         const data = {
@@ -36,7 +36,7 @@ export const addReview = async (req, res) => {
 
 
 /*---- ADD PRODUCT REVIEW ----*/
-export const addProductReview = async (req, res) => {
+const addProductReview = async (req, res) => {
     try {
         const { rating } = req.body;
         const data = {
@@ -66,7 +66,7 @@ export const addProductReview = async (req, res) => {
 }
 
 /*---- GET REVIEWS ----*/
-export const getReviews = async (req, res) => {
+const getReviews = async (req, res) => {
     try {
         const reviews = await ReviewModel.findAll({ where: { to_id: req.params.id } });
         if (reviews) {
@@ -81,7 +81,7 @@ export const getReviews = async (req, res) => {
 }
 
 /*---- GET PRODUCT REVIEWS ----*/
-export const getProductReviews = async (req, res) => {
+const getProductReviews = async (req, res) => {
     try {
         const reviews = await ProductReviewModel.findAll({ where: { to_id: req.params.id } });
         if (reviews) {
@@ -93,4 +93,8 @@ export const getProductReviews = async (req, res) => {
     } catch (error) {
         return responses.internalServerError(res);
     }
+}
+
+module.exports = {
+    addReview, getReviews, getProductReviews, addProductReview
 }

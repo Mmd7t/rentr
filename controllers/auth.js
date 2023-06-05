@@ -1,12 +1,12 @@
-import sendMail from '../services/emailService.js';
-import generateOTP from '../utils/otp.js';
-import UserModel from '../models/userModel.js';
-import { hash, compare } from '../utils/password.js';
-import { generate } from '../utils/token.js';
-import responses from '../helpers/responses.js';
+const sendMail = require('../services/emailService.js');
+const generateOTP = require('../utils/otp.js');
+const UserModel = require('../models/userModel.js');
+const { hash, compare } = require('../utils/password.js');
+const { generate } = require('../utils/token.js');
+const responses = require('../helpers/responses.js');
 
 /*---- REGISTER USER ----*/
-export const register = async (req, res) => {
+const register = async (req, res) => {
     try {
         const { name, email, password, phone, latitude, longitude } = req.body;
         const passwordHash = hash(password);
@@ -53,7 +53,7 @@ export const register = async (req, res) => {
 }
 
 /*---- LOGIN USER ----*/
-export const login = async (req, res) => {
+const login = async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await UserModel.findOne({
@@ -76,7 +76,7 @@ export const login = async (req, res) => {
 }
 
 /*---- SEND OTP ----*/
-export const sendOTP = async (req, res) => {
+const sendOTP = async (req, res) => {
     try {
         const { email } = req.body;
         const otpGenerated = generateOTP();
@@ -99,7 +99,7 @@ export const sendOTP = async (req, res) => {
 }
 
 /*---- VERIFY EMAIL ----*/
-export const verifyEmail = async (req, res) => {
+const verifyEmail = async (req, res) => {
     try {
         const { email, otp } = req.body;
         const user = await UserModel.findOne({
@@ -122,7 +122,7 @@ export const verifyEmail = async (req, res) => {
 }
 
 /*---- RESET PASSWORD ----*/
-export const resetPassword = async (req, res) => {
+const resetPassword = async (req, res) => {
     try {
         const { email, password } = req.body;
         const passwordHash = hash(password);
@@ -141,7 +141,7 @@ export const resetPassword = async (req, res) => {
 }
 
 /*---- CHANGE PASSWORD ----*/
-export const changePassword = async (req, res) => {
+const changePassword = async (req, res) => {
     try {
         const { password } = req.body;
         const passwordHash = hash(password);
@@ -160,7 +160,7 @@ export const changePassword = async (req, res) => {
 }
 
 /*---- CHANGE USER DATA ----*/
-export const changeUserData = async (req, res) => {
+const changeUserData = async (req, res) => {
     try {
         const { name, phone, latitude, longitude } = req.body;
         console.log(req.userId);
@@ -186,7 +186,7 @@ export const changeUserData = async (req, res) => {
 }
 
 /*---- CHANGE PROFILE IMAGE ----*/
-export const changeProfileImage = async (req, res) => {
+const changeProfileImage = async (req, res) => {
     try {
 
         const image = 'http://127.0.0.1:3000/images/' + req.file.filename;
@@ -211,7 +211,7 @@ export const changeProfileImage = async (req, res) => {
 }
 
 /*---- GET USER DATA ----*/
-export const getUserData = async (req, res) => {
+const getUserData = async (req, res) => {
     try {
         const user = await UserModel.findOne({
             where: { id: req.userId }
@@ -224,4 +224,8 @@ export const getUserData = async (req, res) => {
     } catch (error) {
         return responses.internalServerError(res);
     }
+}
+
+module.exports = {
+    login, register, sendOTP, verifyEmail, changeUserData, getUserData, changePassword, resetPassword, changeProfileImage
 }
