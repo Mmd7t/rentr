@@ -41,7 +41,7 @@ const register = async (req, res) => {
                         to: email,
                         OTP: otpGenerated,
                     });
-                    return responses.created(res, "Registered Successfully", user);
+                    return responses.created(res, "Registered Successfully, Please check your email", {});
                 } else {
                     return responses.badRequest(res, "Details are not correct");
                 }
@@ -61,9 +61,18 @@ const login = async (req, res) => {
         });
         if (user) {
             const isMatch = await compare(password, user.password);
+            const data = {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                phone: user.phone,
+                latitude: user.latitude,
+                longitude: user.longitude,
+                image: user.image,
+            };
             if (isMatch) {
                 const token = generate(user.id);
-                return responses.success(res, 'Logged in successfully', { access_token: token });
+                return responses.success(res, 'Logged in successfully', { access_token: token, data });
             } else {
                 return responses.badRequest(res, 'Email and Password does not match');
             }
@@ -174,8 +183,21 @@ const changeUserData = async (req, res) => {
             if (isPhoneExist) {
                 return responses.badRequest(res, 'Phone number already exist');
             } else {
-                await UserModel.update({ name: name, phone: phone, latitude: latitude, longitude: longitude }, { where: { id: req.userId } })
-                return responses.success(res, 'User Data Changed Successfully');
+                const updatedUser = await UserModel.update({ name: name, phone: phone, latitude: latitude, longitude: longitude }, { where: { id: req.userId } })
+                if (updatedUser) {
+                    const data = {
+                        id: updatedUser.id,
+                        name: updatedUser.name,
+                        email: updatedUser.email,
+                        phone: updatedUser.phone,
+                        latitude: updatedUser.latitude,
+                        longitude: updatedUser.longitude,
+                        image: updatedUser.image,
+                    };
+                    return responses.success(res, 'User Data Changed Successfully', data);
+                } else {
+                    return responses.badRequest(res, 'Error while updating data');
+                }
             }
         } else {
             return responses.badRequest(res, 'Email does not exist');
@@ -189,15 +211,22 @@ const changeUserData = async (req, res) => {
 const changeProfileImage = async (req, res) => {
     try {
 
-        const image = 'http://127.0.0.1:3000/images/' + req.file.filename;
+        // const image = 'http://127.0.0.1:3000/images/' + req.file.filename;
+        const image = 'http://api.rentr.click/images/' + req.file.filename;
         const user = await UserModel.findOne({ where: { id: req.userId } });
         if (user) {
-            const data = await UserModel.update({ image: image }, { where: { id: req.userId } })
-            if (data) {
-                const updatedUser = await UserModel.findOne({
-                    where: { id: req.userId }
-                });
-                return responses.success(res, 'Profile Photo Changed Successfully', updatedUser);
+            const updatedUser = await UserModel.update({ image: image }, { where: { id: req.userId } })
+            if (updatedUser) {
+                const data = {
+                    id: updatedUser.id,
+                    name: updatedUser.name,
+                    email: updatedUser.email,
+                    phone: updatedUser.phone,
+                    latitude: updatedUser.latitude,
+                    longitude: updatedUser.longitude,
+                    image: updatedUser.image,
+                };
+                return responses.success(res, 'Profile Photo Changed Successfully', data);
             } else {
                 return responses.badRequest(res, 'Error while uploading image');
             }
