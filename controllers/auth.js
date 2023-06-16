@@ -212,7 +212,7 @@ const changeProfileImage = async (req, res) => {
     try {
 
         // const image = 'http://127.0.0.1:3000/images/' + req.file.filename;
-        const image = 'http://api.rentr.click/images/' + req.file.filename;
+        const image = 'https://api.rentr.click/images/' + req.file.filename;
         const user = await UserModel.findOne({ where: { id: req.userId } });
         if (user) {
             const updatedUser = await UserModel.update({ image: image }, { where: { id: req.userId } })
