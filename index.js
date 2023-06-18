@@ -7,6 +7,7 @@ const morgan = require("morgan");
 const authRoutes = require("./routes/auth.js");
 const productsRoutes = require("./routes/products.js");
 const reviewsRoutes = require("./routes/reviews.js");
+const requestsRoutes = require("./routes/requests.js");
 const { init } = require("./config/dbconfig.js");
 const errorHandler = require('./middleware/errorHandler.js');
 
@@ -31,6 +32,7 @@ app.get('/', (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/product", productsRoutes);
 app.use("/api/review", reviewsRoutes);
+app.use("/api/requests", requestsRoutes);
 
 /*---- MYSQL SETUP ----*/
 const PORT = process.env.APP_PORT || 3000;

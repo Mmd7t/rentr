@@ -39,7 +39,15 @@ let ProductModel = sequelize.define("products", {
         type: DataTypes.TEXT,
         allowNull: false
     },
+    images: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
     userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    category_id: {
         type: DataTypes.INTEGER,
         allowNull: false
     },

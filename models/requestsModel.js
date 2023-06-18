@@ -1,28 +1,28 @@
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/dbconfig.js");
-let ProductReviewModel = sequelize.define("product_reviews", {
+let RequestsModel = sequelize.define("requests", {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false
     },
-    rating: {
+    user_id: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    review: {
-        type: DataTypes.TEXT,
-        allowNull: false
-    },
-    from_id: {
+    product_id: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    to_id: {
-        type: DataTypes.INTEGER,
+    start_booking: {
+        type: DataTypes.DATE,
         allowNull: false
     },
-}, { timestamps: false },);
+    end_booking: {
+        type: DataTypes.DATE,
+        allowNull: false
+    },
+}, { timestamps: true },);
 
-module.exports = ProductReviewModel;
+module.exports = RequestsModel;

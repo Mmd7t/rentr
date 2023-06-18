@@ -1,16 +1,20 @@
-const ProductModel = require('../models/productModel.js');
 const UserModel = require('../models/userModel.js');
+const ProductModel = require('../models/productModel.js');
+const CategoryModel = require('../models/categoryModel.js');
 const responses = require('../helpers/responses.js');
 const { Sequelize } = require('sequelize');
-
-
 
 /*---- ADD PRODUCT ----*/
 const addProduct = async (req, res) => {
     try {
-        const { name, description, price, latitude, longitude, startBooking, endBooking } = req.body;
-        const image = 'http://127.0.0.1:3000/images/' + req.file.filename;
-
+        const { name, description, price, latitude, longitude, startBooking, endBooking, category_id } = req.body;
+        // const image = 'http://127.0.0.1:3000/images/' + req.files[0].filename;
+        const image = 'https://api.rentr.click/images/' + req.files[0].filename;
+        let images = [];
+        console.log(req.files);
+        for (let i = 0; i < req.files.length; i++) {
+            images.push('https://api.rentr.click/images/' + req.files[i].filename);
+        }
         const data = {
             name,
             description,
@@ -20,13 +24,16 @@ const addProduct = async (req, res) => {
             startBooking,
             endBooking,
             image,
+            images: `${images}`,
             userId: req.userId,
+            category_id
         }
         const product = await ProductModel.create(data);
         console.log(product);
         return responses.success(res, 'Product Added Successfully', product);
 
     } catch (error) {
+        console.log(error);
         return responses.internalServerError(res);
     }
 }
@@ -36,11 +43,27 @@ const getProduct = async (req, res) => {
     try {
         const product = await ProductModel.findOne({ where: { id: req.params.id } });
         if (product) {
-            return responses.success(res, `Product id ${req.params.id}`, product);
+            const category = await CategoryModel.findOne({ where: { id: product.category_id } });
+            return responses.success(res, `Product id ${req.params.id}`, {
+                id: product.id,
+                name: product.name,
+                description: product.description,
+                price: product.price,
+                latitude: product.latitude,
+                longitude: product.longitude,
+                startBooking: product.startBooking,
+                endBooking: product.endBooking,
+                image: product.image,
+                images: [...product.images.split(",")],
+                category: category,
+                createdAt: product.createdAt,
+                updatedAt: product.updatedAt,
+            });
         } else {
             return responses.badRequest(res, 'Cannot get the product');
         }
     } catch (error) {
+        console.log(error);
         return responses.internalServerError(res);
     }
 }
@@ -109,6 +132,36 @@ const searchProducts = async (req, res) => {
     }
 }
 
+
+/*---- GET ALL CATEGORIES ----*/
+const getAllCategories = async (req, res) => {
+    try {
+        const categories = await CategoryModel.findAll();
+        if (categories) {
+            return responses.success(res, 'Categories', categories);
+        } else {
+            return responses.badRequest(res, 'Error happened');
+        }
+    } catch (error) {
+        return responses.internalServerError(res);
+    }
+}
+
+/*---- GET PRODUCTS BY CATEGORY ID ----*/
+const getProductsByCategoryId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const products = await ProductModel.findAll({ where: { category_id: id } })
+        if (products) {
+            return responses.success(res, 'Products', products);
+        } else {
+            return responses.badRequest(res, 'Error happened');
+        }
+    } catch (error) {
+        return responses.internalServerError(res);
+    }
+}
+
 module.exports = {
-    addProduct, getProduct, getAllProducts, searchProducts
+    addProduct, getProduct, getAllProducts, searchProducts, getAllCategories, getProductsByCategoryId
 }

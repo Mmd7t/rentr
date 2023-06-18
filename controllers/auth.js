@@ -1,9 +1,10 @@
-const sendMail = require('../services/emailService.js');
+const { sendMailOTP } = require('../services/emailService.js');
 const generateOTP = require('../utils/otp.js');
 const UserModel = require('../models/userModel.js');
 const { hash, compare } = require('../utils/password.js');
 const { generate } = require('../utils/token.js');
 const responses = require('../helpers/responses.js');
+
 
 /*---- REGISTER USER ----*/
 const register = async (req, res) => {
@@ -37,7 +38,7 @@ const register = async (req, res) => {
 
                 if (user) {
                     console.log("user", JSON.stringify(user, null, 2));
-                    await sendMail({
+                    await sendMailOTP({
                         to: email,
                         OTP: otpGenerated,
                     });
@@ -94,7 +95,7 @@ const sendOTP = async (req, res) => {
         });
         if (user) {
             await UserModel.update({ otp: otpGenerated }, { where: { email: email } })
-            await sendMail({
+            await sendMailOTP({
                 to: email,
                 OTP: otpGenerated,
             });
@@ -140,7 +141,7 @@ const resetPassword = async (req, res) => {
         });
         if (user) {
             await UserModel.update({ password: passwordHash }, { where: { email: email } })
-            return responses.success(res, 'Password Changed Successfully');
+            return responses.success(res, 'Password Reseted Successfully');
         } else {
             return responses.badRequest(res, 'Email does not exist');
         }
@@ -159,7 +160,7 @@ const changePassword = async (req, res) => {
         });
         if (user) {
             await UserModel.update({ password: passwordHash }, { where: { id: req.userId } })
-            return responses.success(res, 'Password Reseted Successfully');
+            return responses.success(res, 'Password Changed Successfully');
         } else {
             return responses.badRequest(res, 'Email does not exist');
         }
@@ -177,12 +178,7 @@ const changeUserData = async (req, res) => {
             where: { id: req.userId }
         });
         if (user) {
-            const isPhoneExist = await UserModel.findOne({
-                where: { phone: phone }
-            });
-            if (isPhoneExist) {
-                return responses.badRequest(res, 'Phone number already exist');
-            } else {
+            if (user.phone == phone) {
                 const updatedUser = await UserModel.update({ name: name, phone: phone, latitude: latitude, longitude: longitude }, { where: { id: req.userId } })
                 if (updatedUser) {
                     const data = {
@@ -198,7 +194,31 @@ const changeUserData = async (req, res) => {
                 } else {
                     return responses.badRequest(res, 'Error while updating data');
                 }
+            } else {
+                const isPhoneExist = await UserModel.findOne({
+                    where: { phone: phone },
+                });
+                if (isPhoneExist) {
+                    return responses.badRequest(res, 'Phone number already exist');
+                } else {
+                    const updatedUser = await UserModel.update({ name: name, phone: phone, latitude: latitude, longitude: longitude }, { where: { id: req.userId } })
+                    if (updatedUser) {
+                        const data = {
+                            id: updatedUser.id,
+                            name: updatedUser.name,
+                            email: updatedUser.email,
+                            phone: updatedUser.phone,
+                            latitude: updatedUser.latitude,
+                            longitude: updatedUser.longitude,
+                            image: updatedUser.image,
+                        };
+                        return responses.success(res, 'User Data Changed Successfully', data);
+                    } else {
+                        return responses.badRequest(res, 'Error while updating data');
+                    }
+                }
             }
+
         } else {
             return responses.badRequest(res, 'Email does not exist');
         }
@@ -242,8 +262,9 @@ const changeProfileImage = async (req, res) => {
 /*---- GET USER DATA ----*/
 const getUserData = async (req, res) => {
     try {
+        const { id } = req.params;
         const user = await UserModel.findOne({
-            where: { id: req.userId }
+            where: { id: id }
         });
         if (user) {
             return responses.success(res, 'User Data', user);
