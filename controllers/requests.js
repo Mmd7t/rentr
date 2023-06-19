@@ -18,7 +18,6 @@ const addRequest = async (req, res) => {
             start_booking,
             end_booking,
         }
-
         const request = await RequestsModel.create(data);
         if (request) {
             console.log(request);

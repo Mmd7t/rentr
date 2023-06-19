@@ -31,7 +31,6 @@ const addProduct = async (req, res) => {
         const product = await ProductModel.create(data);
         console.log(product);
         return responses.success(res, 'Product Added Successfully', product);
-
     } catch (error) {
         console.log(error);
         return responses.internalServerError(res);
