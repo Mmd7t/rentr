@@ -14,8 +14,8 @@ function notFound(res, message) {
     return res.status(404).json({ status_code: 404, message });
 }
 
-function internalServerError(res) {
-    return res.status(500).json({ status_code: 500, message: "Internal Server Error" });
+function internalServerError(res, message) {
+    return res.status(500).json({ status_code: 500, message: "Internal Server Error", data: message });
 }
 
 const responses = {

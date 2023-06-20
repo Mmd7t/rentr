@@ -49,7 +49,7 @@ const register = async (req, res) => {
             }
         }
     } catch (error) {
-        return responses.internalServerError(res);
+        return responses.internalServerError(res, error);
     }
 }
 
@@ -81,7 +81,7 @@ const login = async (req, res) => {
             return responses.badRequest(res, 'Email does not exist');
         }
     } catch (error) {
-        return responses.internalServerError(res);
+        return responses.internalServerError(res, error);
     }
 }
 
@@ -104,7 +104,7 @@ const sendOTP = async (req, res) => {
             return responses.badRequest(res, 'Email does not exist');
         }
     } catch (error) {
-        return responses.internalServerError(res);
+        return responses.internalServerError(res, error);
     }
 }
 
@@ -127,7 +127,7 @@ const verifyEmail = async (req, res) => {
             return responses.badRequest(res, 'Email does not exist');
         }
     } catch (error) {
-        return responses.internalServerError(res);
+        return responses.internalServerError(res, error);
     }
 }
 
@@ -146,7 +146,7 @@ const resetPassword = async (req, res) => {
             return responses.badRequest(res, 'Email does not exist');
         }
     } catch (error) {
-        return responses.internalServerError(res);
+        return responses.internalServerError(res, error);
     }
 }
 
@@ -165,7 +165,7 @@ const changePassword = async (req, res) => {
             return responses.badRequest(res, 'Email does not exist');
         }
     } catch (error) {
-        return responses.internalServerError(res);
+        return responses.internalServerError(res, error);
     }
 }
 
@@ -223,7 +223,7 @@ const changeUserData = async (req, res) => {
             return responses.badRequest(res, 'Email does not exist');
         }
     } catch (error) {
-        return responses.internalServerError(res);
+        return responses.internalServerError(res, error);
     }
 }
 
@@ -255,7 +255,7 @@ const changeProfileImage = async (req, res) => {
             return responses.badRequest(res, 'Email does not exist');
         }
     } catch (error) {
-        return responses.internalServerError(res);
+        return responses.internalServerError(res, error);
     }
 }
 
@@ -272,7 +272,7 @@ const getUserData = async (req, res) => {
             return responses.badRequest(res, 'Email does not exist');
         }
     } catch (error) {
-        return responses.internalServerError(res);
+        return responses.internalServerError(res, error);
     }
 }
 

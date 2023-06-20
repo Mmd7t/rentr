@@ -26,14 +26,14 @@ const addProduct = async (req, res) => {
             image,
             images: `${images}`,
             userId: req.userId,
-            category_id
+            category_id,
         }
         const product = await ProductModel.create(data);
         console.log(product);
         return responses.success(res, 'Product Added Successfully', product);
     } catch (error) {
         console.log(error);
-        return responses.internalServerError(res);
+        return responses.internalServerError(res, error);
     }
 }
 
@@ -63,7 +63,7 @@ const getProduct = async (req, res) => {
         }
     } catch (error) {
         console.log(error);
-        return responses.internalServerError(res);
+        return responses.internalServerError(res, error);
     }
 }
 
@@ -83,7 +83,7 @@ const getAllProducts = async (req, res) => {
                 data.sort((a, b) => {
                     return a.distance - b.distance;
                 });
-                return responses.success(res, `Product id ${req.params.id}`, data);
+                return responses.success(res, `All Products`, data);
             } else {
                 return responses.badRequest(res, 'cannot get products');
             }
@@ -92,7 +92,7 @@ const getAllProducts = async (req, res) => {
         }
 
     } catch (error) {
-        return responses.internalServerError(res);
+        return responses.internalServerError(res, error);
     }
 }
 
@@ -127,7 +127,7 @@ const searchProducts = async (req, res) => {
             return responses.badRequest(res, 'Error happened');
         }
     } catch (error) {
-        return responses.internalServerError(res);
+        return responses.internalServerError(res, error);
     }
 }
 
@@ -142,7 +142,7 @@ const getAllCategories = async (req, res) => {
             return responses.badRequest(res, 'Error happened');
         }
     } catch (error) {
-        return responses.internalServerError(res);
+        return responses.internalServerError(res, error);
     }
 }
 
@@ -157,7 +157,7 @@ const getProductsByCategoryId = async (req, res) => {
             return responses.badRequest(res, 'Error happened');
         }
     } catch (error) {
-        return responses.internalServerError(res);
+        return responses.internalServerError(res, error);
     }
 }
 

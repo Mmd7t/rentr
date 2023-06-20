@@ -32,7 +32,7 @@ const addReview = async (req, res) => {
         }
     } catch (error) {
         console.log(error);
-        return responses.internalServerError(res);
+        return responses.internalServerError(res, error);
     }
 }
 
@@ -65,7 +65,7 @@ const addProductReview = async (req, res) => {
             }
         }
     } catch (error) {
-        return responses.internalServerError(res);
+        return responses.internalServerError(res, error);
     }
 }
 
@@ -80,7 +80,7 @@ const getReviews = async (req, res) => {
             return responses.badRequest(res, 'There is no rating yet');
         }
     } catch (error) {
-        return responses.internalServerError(res);
+        return responses.internalServerError(res, error);
     }
 }
 
@@ -95,7 +95,7 @@ const getProductReviews = async (req, res) => {
             return responses.badRequest(res, 'There is no rating yet');
         }
     } catch (error) {
-        return responses.internalServerError(res);
+        return responses.internalServerError(res, error);
     }
 }
 

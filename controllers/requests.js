@@ -26,7 +26,7 @@ const addRequest = async (req, res) => {
             return responses.badRequest(res, 'Error while adding request, please try again');
         }
     } catch (error) {
-        return responses.internalServerError(res);
+        return responses.internalServerError(res, error);
     }
 }
 
@@ -45,7 +45,7 @@ const getAllRequests = async (req, res) => {
         }
     } catch (error) {
         console.log(error);
-        return responses.internalServerError(res);
+        return responses.internalServerError(res, error);
 
     }
 }
@@ -72,7 +72,7 @@ const acceptRequest = async (req, res) => {
         }
     } catch (error) {
         console.log(error);
-        return responses.internalServerError(res);
+        return responses.internalServerError(res, error);
 
     }
 }
@@ -99,7 +99,7 @@ const refuseRequest = async (req, res) => {
         }
     } catch (error) {
         console.log(error);
-        return responses.internalServerError(res);
+        return responses.internalServerError(res, error);
 
     }
 }
