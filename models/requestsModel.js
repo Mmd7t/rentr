@@ -23,6 +23,10 @@ let RequestsModel = sequelize.define("requests", {
         type: DataTypes.DATE,
         allowNull: false
     },
+    note: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
 }, { timestamps: true },);
 
 module.exports = RequestsModel;

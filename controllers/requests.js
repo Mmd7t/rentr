@@ -11,12 +11,13 @@ const UserModel = db.users;
 /*---- ADD REQUEST ----*/
 const addRequest = async (req, res) => {
     try {
-        const { start_booking, end_booking } = req.body;
+        const { start_booking, end_booking, note } = req.body;
         const data = {
             user_id: req.userId,
             product_id: req.params.id,
             start_booking,
             end_booking,
+            note
         }
         const request = await RequestsModel.create(data);
         if (request) {
@@ -54,7 +55,8 @@ const getAllRequests = async (req, res) => {
 const acceptRequest = async (req, res) => {
     try {
         const { id } = req.params;
-        const user = await UserModel.findByPk(id);
+        const request = await RequestsModel.findByPk(id);
+        const user = await UserModel.findByPk(request.user_id);
         if (user) {
             // console.log(requests);
             const email = await sendMail({
@@ -63,6 +65,7 @@ const acceptRequest = async (req, res) => {
                 subject: `Your Request has been accepted`,
             });
             if (email) {
+                await RequestsModel.destroy({ where: { id: id } });
                 return responses.success(res, 'Email has been sent to user');
             } else {
                 return responses.success(res, 'Error while sending email to user');
@@ -81,7 +84,8 @@ const acceptRequest = async (req, res) => {
 const refuseRequest = async (req, res) => {
     try {
         const { id } = req.params;
-        const user = await UserModel.findByPk(id);
+        const request = await RequestsModel.findByPk(id);
+        const user = await UserModel.findByPk(request.user_id);
         if (user) {
             // console.log(requests);
             const email = await sendMail({
@@ -90,6 +94,7 @@ const refuseRequest = async (req, res) => {
                 subject: `Your Request has been refused`,
             });
             if (email) {
+                await RequestsModel.destroy({ where: { id: id } });
                 return responses.success(res, 'Email has been sent to user');
             } else {
                 return responses.success(res, 'Error while sending email to user');
