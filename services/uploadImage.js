@@ -18,11 +18,11 @@ const uploadSingle = multer({
         const mimeType = fileTypes.test(file.mimetype)
         const extname = fileTypes.test(path.extname(file.originalname).toLowerCase())
 
-        if (mimeType && extname) {
-            return cb(null, true)
-        } else {
-            cb('Give proper files formate to upload')
-        }
+        return cb(null, true)
+        // if (mimeType && extname) {
+        // } else {
+        //     cb('Give proper files formate to upload')
+        // }
     }
 }).single('image')
 
