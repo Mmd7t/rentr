@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
 
 const uploadSingle = multer({
     storage: storage,
-    limits: { fileSize: '1000000' },
+    // limits: { fileSize: '1000000' },
     fileFilter: (req, file, cb) => {
         const fileTypes = /jpeg|jpg|png|gif|svg/
         const mimeType = fileTypes.test(file.mimetype)
@@ -28,7 +28,7 @@ const uploadSingle = multer({
 
 const uploadMulti = multer({
     storage: storage,
-    limits: { fileSize: '1000000000' },
+    // limits: { fileSize: '1000000000' },
     fileFilter: (req, file, cb) => {
         const fileTypes = /jpeg|jpg|png|gif/
         const mimeType = fileTypes.test(file.mimetype)
