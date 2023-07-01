@@ -18,7 +18,7 @@ const addReview = async (req, res) => {
             const updatedReview = await ReviewModel.update({ rating: rating }, { where: { from_id: req.userId, to_id: req.params.id } });
             if (updatedReview) {
                 const review = await ReviewModel.findOne({ where: { from_id: req.userId, to_id: req.params.id } });
-                return responses.success(res, 'Review Updated Successfully', review);
+                return responses.success(res, 'Review Added Successfully', review);
             } else {
                 return responses.badRequest(res, 'Error While updating review');
             }
@@ -52,7 +52,7 @@ const addProductReview = async (req, res) => {
             const updatedReview = await ProductReviewModel.update({ rating: rating, review: review }, { where: { from_id: req.userId, to_id: req.params.id } });
             if (updatedReview) {
                 const review = await ReviewModel.findOne({ where: { from_id: req.userId, to_id: req.params.id } });
-                return responses.success(res, 'Review Updated Successfully', review);
+                return responses.success(res, 'Review Added Successfully', review);
             } else {
                 return responses.badRequest(res, 'Error While updating review');
             }
@@ -75,7 +75,8 @@ const getReviews = async (req, res) => {
         const reviews = await ReviewModel.findAll({ where: { to_id: req.params.id } });
         if (reviews) {
             const totalReview = reviews.map((review) => { return review.rating }).reduce((a, b) => a + b, 0);
-            return responses.success(res, `Total of Ratings for id ${req.params.id}`, { totalReview });
+            const numberOfRatings = reviews.map((review) => { return review.rating }).length;
+            return responses.success(res, `Total of Ratings for id ${req.params.id}`, { totalReview, numberOfRatings });
         } else {
             return responses.badRequest(res, 'There is no rating yet');
         }

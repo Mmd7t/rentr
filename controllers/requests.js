@@ -37,6 +37,9 @@ const getAllRequests = async (req, res) => {
         const requests = await RequestsModel.findAll({
             include: [{ model: ProductModel, as: 'productRequests', where: { userId: req.userId } },
             { model: UserModel, as: 'userData' }],
+            order: [
+                ['id', 'DESC']
+            ],
         });
         if (requests) {
             console.log(requests);
@@ -57,12 +60,13 @@ const acceptRequest = async (req, res) => {
         const { id } = req.params;
         const request = await RequestsModel.findByPk(id);
         const user = await UserModel.findByPk(request.user_id);
+        const product = await ProductModel.findByPk(request.product_id);
         if (user) {
             // console.log(requests);
             const email = await sendMail({
                 to: `${user.email}`,
                 name: `${user.name}`,
-                subject: `Your Request has been accepted`,
+                subject: `Your Request to Product "${product.name}" has been accepted`,
             });
             if (email) {
                 await RequestsModel.destroy({ where: { id: id } });
@@ -86,12 +90,13 @@ const refuseRequest = async (req, res) => {
         const { id } = req.params;
         const request = await RequestsModel.findByPk(id);
         const user = await UserModel.findByPk(request.user_id);
+        const product = await ProductModel.findByPk(request.product_id);
         if (user) {
             // console.log(requests);
             const email = await sendMail({
                 to: `${user.email}`,
                 name: `${user.name}`,
-                subject: `Your Request has been refused`,
+                subject: `Your Request to Product "${product.name}" has been refused`,
             });
             if (email) {
                 await RequestsModel.destroy({ where: { id: id } });

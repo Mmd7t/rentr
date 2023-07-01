@@ -120,7 +120,7 @@ function deg2rad(deg) {
 const searchProducts = async (req, res) => {
     try {
         const Op = Sequelize.Op;
-        const products = await ProductModel.findAll({ where: { name: { [Op.like]: `%${req.query.name}%` } } });
+        const products = await ProductModel.findAll({ where: { name: { [Op.startsWith]: `%${req.query.name}%` } } });
         if (products) {
             return responses.success(res, 'Products', products);
         } else {
