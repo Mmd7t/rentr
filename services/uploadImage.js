@@ -14,14 +14,15 @@ const uploadSingle = multer({
     storage: storage,
     limits: { fileSize: '1000000' },
     fileFilter: (req, file, cb) => {
-        const fileTypes = /jpeg|jpg|png|gif/
+        const fileTypes = /jpeg|jpg|png|gif|svg/
         const mimeType = fileTypes.test(file.mimetype)
-        const extname = fileTypes.test(path.extname(file.originalname))
+        const extname = fileTypes.test(path.extname(file.originalname).toLowerCase())
 
         if (mimeType && extname) {
             return cb(null, true)
+        } else {
+            cb('Give proper files formate to upload')
         }
-        cb('Give proper files formate to upload')
     }
 }).single('image')
 
