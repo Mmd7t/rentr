@@ -119,13 +119,27 @@ function deg2rad(deg) {
 /*---- SEARCH PRODUCTS ----*/
 const searchProducts = async (req, res) => {
     try {
-        const Op = Sequelize.Op;
-        const products = await ProductModel.findAll({ where: { name: { [Op.startsWith]: `%${req.query.name}%` } } });
-        if (products) {
-            return responses.success(res, 'Products', products);
+        const user = await UserModel.findOne({ where: { id: req.userId } });
+        if (user) {
+            const Op = Sequelize.Op;
+            const products = await ProductModel.findAll({ where: { name: { [Op.like]: `%${req.query.name}%` } } });
+            let data = []
+            if (products) {
+                products.forEach((item) => {
+                    const distance = getDistanceFromLatLonInKm(user.latitude, user.longitude, item.latitude, item.longitude);
+                    data.push({ item, distance });
+                });
+                data.sort((a, b) => {
+                    return a.distance - b.distance;
+                });
+                return responses.success(res, 'Products', data);
+            } else {
+                return responses.badRequest(res, 'Error happened');
+            }
         } else {
-            return responses.badRequest(res, 'Error happened');
+            return responses.badRequest(res, 'User does not Exist');
         }
+
     } catch (error) {
         return responses.internalServerError(res, error);
     }
