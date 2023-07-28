@@ -38,6 +38,10 @@ let UserModel = sequelize.define("users", {
         type: DataTypes.INTEGER,
         allowNull: false
     },
+    device_token: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
     image: {
         type: DataTypes.STRING,
         allowNull: false

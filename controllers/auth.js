@@ -56,7 +56,7 @@ const register = async (req, res) => {
 /*---- LOGIN USER ----*/
 const login = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password, device_token } = req.body;
         const user = await UserModel.findOne({
             where: { email: email }
         });
@@ -73,6 +73,9 @@ const login = async (req, res) => {
             };
             if (isMatch) {
                 const token = generate(user.id);
+                await UserModel.update({
+                    device_token: device_token
+                }, { where: { email: email } });
                 return responses.success(res, 'Logged in successfully', { access_token: token, data });
             } else {
                 return responses.badRequest(res, 'Email and Password does not match');
