@@ -20,7 +20,8 @@ const register = async (req, res) => {
             latitude,
             longitude,
             otp: otpGenerated,
-            image: ''
+            image: '',
+            device_token: ''
         };
         const isEmailExist = await UserModel.findOne({
             where: { email: email }
