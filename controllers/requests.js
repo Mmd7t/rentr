@@ -29,17 +29,8 @@ const addRequest = async (req, res) => {
         const product = await ProductModel.findByPk(req.params.id);
         const user = await UserModel.findByPk(product.userId);
         if (request) {
-            console.log(request);
-            admin.messaging().sendToDevice(user.device_token, 'Your Request to Product "${product.name}" has been accepted', notification_options)
-                .then(response => {
-
-                    res.status(200).send("Notification sent successfully" + response)
-
-                })
-                .catch(error => {
-                    console.log(error);
-                    return responses.badRequest(res, `Error in notification system ${error}`);
-                });
+            const ress = await admin.messaging().sendToDevice(user.device_token, 'Your Request to Product "${product.name}" has been accepted', notification_options)
+            res.status(200).send("Notification sent successfully" + ress)
         } else {
             return responses.badRequest(res, 'Error while adding request, please try again');
         }
