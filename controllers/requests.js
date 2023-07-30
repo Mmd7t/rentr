@@ -38,7 +38,7 @@ const addRequest = async (req, res) => {
                 })
                 .catch(error => {
                     console.log(error);
-                    return responses.badRequest(res, 'Error in notification system');
+                    return responses.badRequest(res, `Error in notification system ${error}`);
                 });
         } else {
             return responses.badRequest(res, 'Error while adding request, please try again');
