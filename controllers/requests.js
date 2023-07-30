@@ -38,8 +38,8 @@ const addRequest = async (req, res) => {
                 })
                 .catch(error => {
                     console.log(error);
+                    return responses.badRequest(res, 'Error in notification system');
                 });
-            return responses.success(res, 'Request Added Successfully', request);
         } else {
             return responses.badRequest(res, 'Error while adding request, please try again');
         }
