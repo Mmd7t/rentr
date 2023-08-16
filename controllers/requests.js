@@ -2,7 +2,7 @@
 const db = require('../models/index.js');
 const responses = require('../helpers/responses.js');
 const { sendMail } = require('../services/emailService.js');
-const admin = require('../config/firebaseConfig.js')
+const FCM = require('../config/firebaseConfig.js')
 
 const RequestsModel = db.requests;
 const ProductModel = db.products;
@@ -29,8 +29,24 @@ const addRequest = async (req, res) => {
         const product = await ProductModel.findByPk(req.params.id);
         const user = await UserModel.findByPk(product.userId);
         if (request) {
-            const ress = await admin.messaging().sendToDevice(user.device_token, 'Your Request to Product "${product.name}" has been accepted', notification_options)
-            res.status(200).send("Notification sent successfully" + ress)
+            let message = {
+                notification: {
+                    title: "Test Notification",
+                    body: "Notification body",
+                },
+                data: {
+                    orderId: "123456",
+                    orderDate: "2023-8-16",
+                },
+                token: user.device_token,
+            };
+            FCM.send(message, function (err, resp) {
+                if (err) {
+                    return responses.internalServerError(res, err);
+                } else {
+                    return responses.success(res, "Notification Sent");
+                }
+            })
         } else {
             return responses.badRequest(res, 'Error while adding request, please try again');
         }
@@ -78,15 +94,6 @@ const acceptRequest = async (req, res) => {
             });
             if (email) {
                 await RequestsModel.destroy({ where: { id: id } });
-                admin.messaging().sendToDevice(user.device_token, 'Your Request to Product "${product.name}" has been accepted', notification_options)
-                    .then(response => {
-
-                        res.status(200).send("Notification sent successfully" + response)
-
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
                 return responses.success(res, 'Email has been sent to user');
             } else {
                 return responses.success(res, 'Error while sending email to user');
