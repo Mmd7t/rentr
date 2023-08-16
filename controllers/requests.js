@@ -8,11 +8,6 @@ const RequestsModel = db.requests;
 const ProductModel = db.products;
 const UserModel = db.users;
 
-const notification_options = {
-    priority: "high",
-    timeToLive: 60 * 60 * 24
-};
-
 
 /*---- ADD REQUEST ----*/
 const addRequest = async (req, res) => {
